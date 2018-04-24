@@ -9,3 +9,6 @@ If you have this enabled with a user account, you will get errors.
 2. Open dev tools (Ctrl+Shift+I), go to the Application tab, and add or edit the `token` entry with the bot token in quotes, i.e. `"McgxZTUyMFh4BZB5NGzUIw.DPOp5Q.eeK-M6FyC6HKK8qTyjxJn7LNc1Ds"`.
 3. Enable the plugin or add it to your `plugins` folder.
 4. Press Ctrl+R and have fun!
+
+#### Download
+To quickly download, right-click [this link](/raw/master/bot_login.js) and `Save link as...`
