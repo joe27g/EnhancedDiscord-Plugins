@@ -8,13 +8,9 @@ module.exports = new Plugin({
     preload: true,
 
     load: async function() {
-
-        while (!window.findRawModule || !findRawModule('showPendingNotification', true))
-            await this.sleep(2);
-
         let m = findRawModule('showPendingNotification');
-        if (m && m.i && req.c[m.i + 1]) {
-            monkeyPatch(req.c[m.i + 1].exports.prototype, '_handleDispatch', function(b) {
+        if (m && m.i && req.c[m.i - 1]) {
+            monkeyPatch(req.c[m.i - 1].exports.prototype, '_handleDispatch', function(b) {
                 if (b.methodArguments[0].user && b.methodArguments[0].user.bot) {
                     console.log(b);
                     module.exports.log('Faking READY as user account');
@@ -33,9 +29,6 @@ module.exports = new Plugin({
             });
         }
 
-        while (!findModule('hasUnread', true) || !findModule('getToken', true) || !findModule('ack', true))
-            await this.sleep(1000);
-
         // unreads aren't a thing for bots
         monkeyPatch(findModule('hasUnread').__proto__, 'hasUnread', function() {
             return false;
@@ -53,7 +46,7 @@ module.exports = new Plugin({
     },
     unload: function() {
         let m = findRawModule('showPendingNotification');
-        if (m && m.i && req.c[m.i + 1])
+        if (m && m.i && req.c[m.i - 1])
             req.c[m.i + 1].exports.prototype._handleDispatch.unpatch();
 
         m = findModule('hasUnread')
