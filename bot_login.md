@@ -13,4 +13,4 @@ If you have this enabled with a user account, you will get errors.
 4. Press Ctrl+R and have fun!
 
 #### Download
-<a href="https://github.com/joe27g/EnhancedDiscord-Plugins/raw/master/bot_login.js" target="_blank" download>Click here</a> or right-click [this link](https://github.com/joe27g/EnhancedDiscord-Plugins/raw/master/bot_login.js) and `Save link as...`
+To quickly download, right-click [this link](https://github.com/joe27g/EnhancedDiscord-Plugins/raw/master/bot_login.js) and `Save link as...`
