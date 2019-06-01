@@ -7,3 +7,5 @@ Extra plugins for ![ED icon](https://enhanceddiscord.com/favicon.ico) [EnhancedD
 - [Anti Ping](/anti_ping.md) - Hides ping icon for servers which you have muted & suppressed @​everyone. [[source]](/anti_ping.js)
 
 - [Emoji Packs](/emoji_packs.md) - Allows you to replace Discord's emojis with a new set. [[source]](/emoji_packs.js)
+
+- [Experiments](/experiments.md) - Enables experimental features not yet released to standard Discord clients. [[source]](/emoji_packs.js)
