@@ -8,9 +8,9 @@ module.exports = new Plugin({
     preload: true,
 
     load: async function() {
-        let m = findRawModule('showPendingNotification');
-        if (m && m.i && req.c[m.i - 1]) {
-            monkeyPatch(req.c[m.i - 1].exports.prototype, '_handleDispatch', function(b) {
+        let m = findRawModule('changeNickname');
+        if (m && m.i && req.c[m.i + 1]) {
+            monkeyPatch(req.c[m.i + 1].exports.default.prototype, '_handleDispatch', function(b) {
                 if (b.methodArguments[0].user && b.methodArguments[0].user.bot) {
                     console.log(b);
                     module.exports.log('Faking READY as user account');
@@ -33,7 +33,7 @@ module.exports = new Plugin({
         monkeyPatch(findModule('hasUnread').__proto__, 'hasUnread', function() {
             return false;
         });
-        m = findModule('ack');
+        m = findModule('manualAck');
         const ackers = ['ack', 'ackCategory', 'localAck', 'manualAck'];
         for (const fName of ackers) {
             monkeyPatch(m, fName, () => {});
@@ -45,15 +45,15 @@ module.exports = new Plugin({
         });
     },
     unload: function() {
-        let m = findRawModule('showPendingNotification');
-        if (m && m.i && req.c[m.i - 1])
-            req.c[m.i + 1].exports.prototype._handleDispatch.unpatch();
+        let m = findRawModule('changeNickname');
+        if (m && m.i && req.c[m.i + 1])
+            req.c[m.i + 1].exports.default.prototype._handleDispatch.unpatch();
 
         m = findModule('hasUnread')
         if (m && m.__proto__ && m.__proto__.hasUnread && m.__proto__.hasUnread.__monkeyPatched)
             m.__proto__.hasUnread.unpatch();
 
-        m = findModule('ack');
+        m = findModule('manualAck');
         const ackers = ['ack', 'ackCategory', 'localAck', 'manualAck'];
         for (const fName of ackers) {
             if (m[fName] && m[fName].__monkeyPatched)
