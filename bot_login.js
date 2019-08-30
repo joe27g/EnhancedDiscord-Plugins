@@ -8,9 +8,14 @@ module.exports = new Plugin({
     preload: true,
 
     load: async function() {
-        let m = findRawModule('changeNickname');
-        if (m && m.i && req.c[m.i + 1]) {
-            monkeyPatch(req.c[m.i + 1].exports.default.prototype, '_handleDispatch', function(b) {
+        this._mod = EDApi.findModule(mod => { // this section based on https://pastebin.com/Fn9EYNLa
+            if (!(typeof mod === 'function' && 'prototype' in mod)) return;
+            const descriptors = Object.getOwnPropertyDescriptors(mod.prototype);
+            if ('_discoveryFailed' in descriptors) return mod;
+        });
+
+        if (this._mod) {
+            monkeyPatch(this._mod.prototype, '_handleDispatch', function(b) {
                 if (b.methodArguments[0].user && b.methodArguments[0].user.bot) {
                     console.log(b);
                     module.exports.log('Faking READY as user account');
@@ -24,6 +29,8 @@ module.exports = new Plugin({
                     b.methodArguments[0].relationships = [];
                     b.methodArguments[0].notes = {};
                     b.methodArguments[0].user_feed_settings = [];
+                    b.methodArguments[0].analytics_tokens = [];
+                    b.methodArguments[0].consents = [];
                 }
                 return b.callOriginalMethod(b.methodArguments);
             });
@@ -45,9 +52,8 @@ module.exports = new Plugin({
         });
     },
     unload: function() {
-        let m = findRawModule('changeNickname');
-        if (m && m.i && req.c[m.i + 1])
-            req.c[m.i + 1].exports.default.prototype._handleDispatch.unpatch();
+        if (this._mod)
+            this._mod.prototype._handleDispatch.unpatch();
 
         m = findModule('hasUnread')
         if (m && m.__proto__ && m.__proto__.hasUnread && m.__proto__.hasUnread.__monkeyPatched)
