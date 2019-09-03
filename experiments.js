@@ -7,14 +7,22 @@ module.exports = new Plugin({
     color: 'limegreen',
 
     load: function() {
-        findModule('isDeveloper').__proto__ = {
-            constructor: findModule('isDeveloper').__proto__,
-            getExperimentDescriptor: findModule('isDeveloper').__proto__.getExperimentDescriptor,
+        const mod = findModule(mod => mod.getExperimentDescriptor && !mod.getExperimentId);
+        if (!mod || !mod.__proto__) {
+            return this.warn("Couldn't find isDeveloper module.")
+        }
+        mod.__proto__ = {
+            constructor: mod.__proto__,
+            getExperimentDescriptor: mod.__proto__.getExperimentDescriptor,
             isDeveloper: true,
-            __proto__: findModule('isDeveloper').__proto__.__proto__
+            __proto__: mod.__proto__.__proto__
         };
     },
     unload: function() {
-        findModule('isDeveloper').__proto__.isDeveloper = false;
+        const mod = findModule(mod => mod.getExperimentDescriptor && !mod.getExperimentId);
+        if (!mod || !mod.__proto__) {
+            return this.warn("Couldn't find isDeveloper module.")
+        }
+        mod.__proto__.isDeveloper = false;
     }
 });
