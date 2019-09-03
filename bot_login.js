@@ -34,6 +34,8 @@ module.exports = new Plugin({
                 }
                 return b.callOriginalMethod(b.methodArguments);
             });
+        } else {
+            return this.error("Couldn't find main module needed for this plugin to work.");
         }
 
         // unreads aren't a thing for bots
@@ -48,7 +50,8 @@ module.exports = new Plugin({
 
         // fix Authorization headers
         monkeyPatch(findModule('getToken'), 'getToken', function(b) {
-            return "Bot " + b.callOriginalMethod(b.methodArguments);
+            const token = b.callOriginalMethod(b.methodArguments);
+            return token ? token.startsWith("Bot ") ? token : "Bot " + token : null;
         });
     },
     unload: function() {
